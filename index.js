@@ -1,9 +1,9 @@
-import { extension_settings, renderExtensionTemplateAsync } from "../../extensions.js";
-import { saveSettingsDebounced } from "../../../script.js";
-import { callPopup } from "../../popup.js";
-import { SlashCommandParser } from "../../slash-commands/SlashCommandParser.js";
-import { SlashCommand } from "../../slash-commands/SlashCommand.js";
-import { SlashCommandArgument, SlashCommandNamedArgument, ARGUMENT_TYPE } from "../../slash-commands/SlashCommandArgument.js";
+import { extension_settings, renderExtensionTemplateAsync } from "../../../extensions.js";
+import { saveSettingsDebounced } from "../../../../script.js";
+import { callPopup } from "../../../popup.js";
+import { SlashCommandParser } from "../../../slash-commands/SlashCommandParser.js";
+import { SlashCommand } from "../../../slash-commands/SlashCommand.js";
+import { SlashCommandArgument, SlashCommandNamedArgument, ARGUMENT_TYPE } from "../../../slash-commands/SlashCommandArgument.js";
 
 const MODULE_NAME = "st-api-manager";
 const TEMPLATE_PATH = `third-party/${MODULE_NAME}`;
@@ -99,6 +99,7 @@ const PRESETS = {
 
 let currentFilter = "all";
 let currentSearchQuery = "";
+let isInitialized = false;
 
 /**
  * Generate unique profile ID
@@ -185,7 +186,6 @@ function setActiveProfile(profileId, syncToUI = true) {
 function syncProfileToSillyTavern(profile) {
     if (!profile) return;
     try {
-        // Try filling SillyTavern OpenAI-compatible API input fields if present
         const urlInput = $('#api_url_text');
         if (urlInput.length && profile.apiUrl) {
             urlInput.val(profile.apiUrl).trigger('input').trigger('change');
@@ -214,7 +214,6 @@ async function testApiConnection(profile) {
     const startTime = Date.now();
     const cleanUrl = normalizeUrl(profile.apiUrl);
     
-    // Construct headers
     const headers = {
         "Content-Type": "application/json",
     };
@@ -226,7 +225,6 @@ async function testApiConnection(profile) {
         }
     }
 
-    // Merge custom headers if defined
     if (profile.customHeaders) {
         try {
             const custom = typeof profile.customHeaders === "string" ? JSON.parse(profile.customHeaders) : profile.customHeaders;
@@ -237,7 +235,6 @@ async function testApiConnection(profile) {
     }
 
     try {
-        // Try testing with /models endpoint first, then /chat/completions fallback
         let targetUrl = `${cleanUrl}/models`;
         let response = null;
         let latency = 0;
@@ -254,7 +251,6 @@ async function testApiConnection(profile) {
             clearTimeout(timeoutId);
             latency = Date.now() - startTime;
         } catch (getErr) {
-            // If GET /models failed or CORS blocked, try POST /chat/completions with minimal payload
             const testPayload = {
                 model: profile.model || "gpt-3.5-turbo",
                 messages: [{ role: "user", content: "Hi" }],
@@ -275,7 +271,6 @@ async function testApiConnection(profile) {
         }
 
         if (response && (response.ok || response.status === 200 || response.status === 400 || response.status === 404)) {
-            // If status is 200 or reachable
             if (response.ok) {
                 return {
                     success: true,
@@ -367,7 +362,7 @@ function renderProfilesList() {
     container.empty();
 
     let profiles = settings.profiles || [];
-    countAll.text(profiles.length);
+    if (countAll.length) countAll.text(profiles.length);
 
     // Apply Filter
     if (currentFilter !== "all") {
@@ -540,19 +535,21 @@ function updateActiveBanner() {
     const topBadgeName = $("#st_api_active_name");
 
     if (!active) {
-        banner.hide();
-        topBadge.hide();
+        if (banner.length) banner.hide();
+        if (topBadge.length) topBadge.hide();
         return;
     }
 
-    topBadgeName.text(active.name);
-    topBadge.show();
+    if (topBadgeName.length) topBadgeName.text(active.name);
+    if (topBadge.length) topBadge.show();
 
-    $("#st_api_banner_name").text(active.name);
-    $("#st_api_banner_provider").text((active.provider || 'custom').toUpperCase());
-    $("#st_api_banner_url").text(active.apiUrl || '-');
-    $("#st_api_banner_model").text(active.model || '-');
-    banner.show();
+    if (banner.length) {
+        $("#st_api_banner_name").text(active.name);
+        $("#st_api_banner_provider").text((active.provider || 'custom').toUpperCase());
+        $("#st_api_banner_url").text(active.apiUrl || '-');
+        $("#st_api_banner_model").text(active.model || '-');
+        banner.show();
+    }
 }
 
 /**
@@ -561,10 +558,8 @@ function updateActiveBanner() {
 async function openEditModal(existingProfile = null) {
     const modalHtml = $(await renderExtensionTemplateAsync(TEMPLATE_PATH, "modal"));
     
-    // Set Header
     modalHtml.find("#st_api_modal_heading").text(existingProfile ? "编辑 API 配置" : "新增 API 配置");
 
-    // Prepopulate fields if editing
     if (existingProfile) {
         modalHtml.find("#st_api_form_id").val(existingProfile.id);
         modalHtml.find("#st_api_form_name").val(existingProfile.name || "");
@@ -586,7 +581,6 @@ async function openEditModal(existingProfile = null) {
         modalHtml.find("#st_api_form_set_active").prop("checked", true);
     }
 
-    // Tab Switching
     modalHtml.find(".st-api-tab-btn").on("click", function() {
         const tab = $(this).data("tab");
         modalHtml.find(".st-api-tab-btn").removeClass("active");
@@ -595,7 +589,6 @@ async function openEditModal(existingProfile = null) {
         modalHtml.find(`#st_tab_${tab}`).addClass("active");
     });
 
-    // Preset Chips
     modalHtml.find(".st-api-chip").on("click", function() {
         const presetKey = $(this).data("preset");
         const preset = PRESETS[presetKey];
@@ -615,7 +608,6 @@ async function openEditModal(existingProfile = null) {
         }
     });
 
-    // Toggle Key visibility
     modalHtml.find("#st_api_btn_toggle_key").on("click", function() {
         const keyInput = modalHtml.find("#st_api_form_key");
         const icon = $(this).find("i");
@@ -628,7 +620,6 @@ async function openEditModal(existingProfile = null) {
         }
     });
 
-    // Paste Key
     modalHtml.find("#st_api_btn_paste_key").on("click", async () => {
         try {
             const text = await navigator.clipboard.readText();
@@ -641,14 +632,12 @@ async function openEditModal(existingProfile = null) {
         }
     });
 
-    // Normalize URL button
     modalHtml.find("#st_api_btn_normalize_url").on("click", () => {
         const urlInput = modalHtml.find("#st_api_form_url");
         urlInput.val(normalizeUrl(urlInput.val()));
         toastr.info("已规范化 API 网址格式");
     });
 
-    // Fetch Models button
     modalHtml.find("#st_api_btn_fetch_models").on("click", async function() {
         const btn = $(this);
         const url = modalHtml.find("#st_api_form_url").val();
@@ -684,7 +673,6 @@ async function openEditModal(existingProfile = null) {
         }
     });
 
-    // Test in Modal
     modalHtml.find("#st_api_btn_test_modal").on("click", async function() {
         const resultBox = modalHtml.find("#st_api_modal_test_result");
         const tempProfile = {
@@ -706,7 +694,6 @@ async function openEditModal(existingProfile = null) {
         }
     });
 
-    // Call ST Popup
     const popupPromise = callPopup(modalHtml, "text", "", { okButton: false, cancelButton: false, wide: true, large: true });
 
     modalHtml.find("#st_api_btn_cancel_modal").on("click", () => {
@@ -780,7 +767,6 @@ async function openEditModal(existingProfile = null) {
         persistSettings();
         toastr.success(`已保存 API 配置【${name}】`);
 
-        // Close modal
         $('dialog[class^=popup]').remove();
 
         renderProfilesList();
@@ -946,17 +932,16 @@ function registerSlashCommands() {
 }
 
 /**
- * Extension Startup / Initialization
+ * Main Extension Initialization Function
  */
-jQuery(async () => {
-    try {
-        // Load HTML template
-        const panelHtml = $(await renderExtensionTemplateAsync(TEMPLATE_PATH, "panel"));
+export async function init() {
+    if (isInitialized) return;
+    isInitialized = true;
 
-        // Append to SillyTavern extensions drawer
+    try {
+        const panelHtml = $(await renderExtensionTemplateAsync(TEMPLATE_PATH, "panel"));
         $("#extensions_settings").append(panelHtml);
 
-        // Toolbar Events
         $("#st_api_btn_add").on("click", () => openEditModal());
         $("#st_api_btn_export").on("click", exportProfiles);
         $("#st_api_btn_import").on("click", () => $("#st_api_file_import").trigger("click"));
@@ -967,13 +952,11 @@ jQuery(async () => {
             }
         });
 
-        // Search Input
         $("#st_api_search_input").on("input", function() {
             currentSearchQuery = $(this).val();
             renderProfilesList();
         });
 
-        // Filter Tags
         $(".st-api-filter-tag").on("click", function() {
             $(".st-api-filter-tag").removeClass("active");
             $(this).addClass("active");
@@ -981,7 +964,6 @@ jQuery(async () => {
             renderProfilesList();
         });
 
-        // Banner actions
         $("#st_api_btn_banner_test").on("click", async function() {
             const active = getActiveProfile();
             if (!active) return;
@@ -1007,10 +989,7 @@ jQuery(async () => {
             }
         });
 
-        // Register Slash Commands
         registerSlashCommands();
-
-        // Initial Render
         renderProfilesList();
         updateActiveBanner();
 
@@ -1018,4 +997,9 @@ jQuery(async () => {
     } catch (err) {
         console.error(`[${MODULE_NAME}] Init error:`, err);
     }
+}
+
+// Auto-run on jQuery ready as well as export init
+jQuery(async () => {
+    await init();
 });
