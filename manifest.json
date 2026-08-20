@@ -1,0 +1,13 @@
+{
+  "display_name": "API 档案管理器 (API Manager)",
+  "loading_order": 20,
+  "requires": [],
+  "optional": [],
+  "js": "index.js",
+  "css": "style.css",
+  "author": "davidleetmp",
+  "version": "1.0.0",
+  "homePage": "https://github.com/davidleetmp/st-api-manager",
+  "auto_update": false,
+  "description": "本地安全保存与快速切换各平台 API 档案（包含网址、密钥、模型、附加请求头与参数），支持一键激活、连通性测试与模型拉取。"
+}

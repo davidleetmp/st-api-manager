@@ -1,0 +1,21 @@
+{
+  "name": "st-api-manager",
+  "version": "1.0.0",
+  "description": "A comprehensive SillyTavern extension for managing, testing, and switching multiple LLM API profiles locally with zero leakage risk.",
+  "main": "index.js",
+  "scripts": {
+    "test": "node test/api-manager.test.js"
+  },
+  "keywords": [
+    "sillytavern",
+    "sillytavern-extension",
+    "api-manager",
+    "openai",
+    "deepseek",
+    "claude",
+    "gemini",
+    "ollama"
+  ],
+  "author": "davidleetmp",
+  "license": "MIT"
+}

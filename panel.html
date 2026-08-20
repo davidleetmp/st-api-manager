@@ -1,0 +1,86 @@
+<div class="st-api-manager-container">
+    <div class="inline-drawer">
+        <div class="inline-drawer-toggle inline-drawer-header">
+            <div class="st-api-drawer-title">
+                <i class="fa-solid fa-server-shield fa-fw"></i>
+                <b>API 档案管理器 (API Manager)</b>
+                <span id="st_api_active_badge" class="st-api-badge st-api-badge-active" style="display:none;">
+                    <i class="fa-solid fa-bolt"></i> <span id="st_api_active_name">未设置</span>
+                </span>
+            </div>
+            <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
+        </div>
+        <div class="inline-drawer-content">
+            <!-- Toolbar -->
+            <div class="st-api-toolbar">
+                <div class="st-api-search-box">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                    <input type="text" id="st_api_search_input" class="text_pole" placeholder="搜索 API 名称 / 网址 / 模型..." />
+                </div>
+                <div class="st-api-actions">
+                    <button id="st_api_btn_add" class="menu_button menu_button_icon" title="新增 API 配置">
+                        <i class="fa-solid fa-plus"></i> <span>新增 API</span>
+                    </button>
+                    <button id="st_api_btn_import" class="menu_button menu_button_icon" title="从 JSON 导入配置">
+                        <i class="fa-solid fa-file-import"></i> <span>导入</span>
+                    </button>
+                    <button id="st_api_btn_export" class="menu_button menu_button_icon" title="导出备份为 JSON">
+                        <i class="fa-solid fa-file-export"></i> <span>导出</span>
+                    </button>
+                    <input type="file" id="st_api_file_import" accept=".json" style="display:none;" />
+                </div>
+            </div>
+
+            <!-- Provider Filter Tags -->
+            <div class="st-api-filter-tabs">
+                <button class="st-api-filter-tag active" data-provider="all">全部 (<span id="st_api_count_all">0</span>)</button>
+                <button class="st-api-filter-tag" data-provider="openai">OpenAI</button>
+                <button class="st-api-filter-tag" data-provider="deepseek">DeepSeek</button>
+                <button class="st-api-filter-tag" data-provider="claude">Claude</button>
+                <button class="st-api-filter-tag" data-provider="gemini">Gemini</button>
+                <button class="st-api-filter-tag" data-provider="ollama">Ollama</button>
+                <button class="st-api-filter-tag" data-provider="custom">自定义/其他</button>
+            </div>
+
+            <!-- Active Profile Banner -->
+            <div id="st_api_active_banner" class="st-api-active-banner" style="display:none;">
+                <div class="st-api-active-banner-header">
+                    <div class="st-api-active-banner-title">
+                        <i class="fa-solid fa-circle-check"></i> 当前生效 API：<strong id="st_api_banner_name"></strong>
+                        <span id="st_api_banner_provider" class="st-api-tag"></span>
+                    </div>
+                    <div class="st-api-banner-controls">
+                        <button id="st_api_btn_banner_test" class="menu_button" title="测试当前 API 连通性">
+                            <i class="fa-solid fa-network-wired"></i> 测试连接
+                        </button>
+                        <button id="st_api_btn_banner_apply" class="menu_button" title="将当前 API 配置同步到酒馆主连接">
+                            <i class="fa-solid fa-plug-circle-check"></i> 同步到酒馆
+                        </button>
+                    </div>
+                </div>
+                <div class="st-api-active-banner-details">
+                    <div class="st-api-detail-item"><i class="fa-solid fa-link"></i> <span id="st_api_banner_url"></span></div>
+                    <div class="st-api-detail-item"><i class="fa-solid fa-microchip"></i> <span id="st_api_banner_model"></span></div>
+                    <div id="st_api_banner_latency" class="st-api-latency-indicator" style="display:none;"></div>
+                </div>
+            </div>
+
+            <!-- API Profiles Grid -->
+            <div id="st_api_list_container" class="st-api-list-grid">
+                <!-- Profile Cards dynamically inserted here -->
+            </div>
+
+            <!-- Empty State -->
+            <div id="st_api_empty_state" class="st-api-empty" style="display:none;">
+                <i class="fa-solid fa-cloud-arrow-up st-api-empty-icon"></i>
+                <p>暂未添加任何 API 档案</p>
+                <small>点击上方 <b>“新增 API”</b> 快速添加您的 OpenAI / DeepSeek / Claude / Gemini / 本地模型配置</small>
+            </div>
+
+            <hr class="sysHR" />
+            <div class="st-api-footer-tips">
+                <small><i class="fa-solid fa-shield-halved"></i> <b>数据安全承诺：</b> 所有 API 网址、密钥及自定义配置均严格保存在您的本地浏览器中，绝不会被上传或远程泄露。</small>
+            </div>
+        </div>
+    </div>
+</div>
