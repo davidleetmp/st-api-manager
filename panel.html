@@ -1,85 +1,148 @@
-<div class="st-api-manager-container">
+<div class="st-api-root">
     <div class="inline-drawer">
-        <div class="inline-drawer-toggle inline-drawer-header">
-            <div class="st-api-drawer-title">
-                <i class="fa-solid fa-server-shield fa-fw"></i>
-                <b>API 档案管理器 (API Manager)</b>
-                <span id="st_api_active_badge" class="st-api-badge st-api-badge-active" style="display:none;">
-                    <i class="fa-solid fa-bolt"></i> <span id="st_api_active_name">未设置</span>
-                </span>
+        <div class="inline-drawer-toggle inline-drawer-header st-api-drawer-header">
+            <div class="st-api-header-left">
+                <div class="st-api-brand-icon">
+                    <i class="fa-solid fa-server"></i>
+                </div>
+                <div class="st-api-brand-info">
+                    <span class="st-api-brand-title">API 档案管理器</span>
+                    <span class="st-api-brand-badge">Profiles</span>
+                </div>
+                <div id="st_api_active_badge" class="st-api-pill-badge st-api-pill-active" style="display:none;">
+                    <span class="st-api-status-dot"></span>
+                    <span id="st_api_active_name">未激活</span>
+                </div>
             </div>
             <div class="inline-drawer-icon fa-solid fa-circle-chevron-down down"></div>
         </div>
-        <div class="inline-drawer-content">
-            <!-- Toolbar -->
-            <div class="st-api-toolbar">
-                <div class="st-api-search-box">
-                    <i class="fa-solid fa-magnifying-glass"></i>
-                    <input type="text" id="st_api_search_input" class="text_pole" placeholder="搜索 API 名称 / 网址 / 模型..." />
+
+        <div class="inline-drawer-content st-api-drawer-body">
+            <!-- Global Command & Search Toolbar -->
+            <div class="st-api-toolbar-shell">
+                <div class="st-api-search-wrap">
+                    <i class="fa-solid fa-magnifying-glass st-api-search-ico"></i>
+                    <input type="text" id="st_api_search_input" class="st-api-search-field" placeholder="搜索 API 档案名称 / 端点 / 模型..." autocomplete="off" />
                 </div>
-                <div class="st-api-actions">
-                    <button id="st_api_btn_add" class="menu_button menu_button_icon" title="新增 API 配置">
-                        <i class="fa-solid fa-plus"></i> <span>新增 API</span>
+                <div class="st-api-toolbar-btns">
+                    <button type="button" id="st_api_btn_import_main" class="st-api-btn st-api-btn-accent" title="一键读取当前酒馆主连接设置（包含网址、密钥、模型及默认附加参数）并生成新档案">
+                        <i class="fa-solid fa-cloud-arrow-down"></i>
+                        <span>导入当前主API</span>
                     </button>
-                    <button id="st_api_btn_import" class="menu_button menu_button_icon" title="从 JSON 导入配置">
-                        <i class="fa-solid fa-file-import"></i> <span>导入</span>
+                    <button type="button" id="st_api_btn_add" class="st-api-btn st-api-btn-primary" title="新增 API 配置">
+                        <i class="fa-solid fa-plus"></i>
+                        <span>新增档案</span>
                     </button>
-                    <button id="st_api_btn_export" class="menu_button menu_button_icon" title="导出备份为 JSON">
-                        <i class="fa-solid fa-file-export"></i> <span>导出</span>
+                    <button type="button" id="st_api_btn_import" class="st-api-btn st-api-btn-secondary" title="从 JSON 文件导入配置">
+                        <i class="fa-solid fa-arrow-down-to-bracket"></i>
+                        <span>导入</span>
+                    </button>
+                    <button type="button" id="st_api_btn_export" class="st-api-btn st-api-btn-secondary" title="导出全部配置为 JSON 备份">
+                        <i class="fa-solid fa-arrow-up-from-bracket"></i>
+                        <span>备份</span>
                     </button>
                     <input type="file" id="st_api_file_import" accept=".json" style="display:none;" />
                 </div>
             </div>
 
-            <!-- Provider Filter Tags -->
-            <div class="st-api-filter-tabs">
-                <button class="st-api-filter-tag active" data-provider="all">全部 (<span id="st_api_count_all">0</span>)</button>
-                <button class="st-api-filter-tag" data-provider="openai">OpenAI</button>
-                <button class="st-api-filter-tag" data-provider="deepseek">DeepSeek</button>
-                <button class="st-api-filter-tag" data-provider="claude">Claude</button>
-                <button class="st-api-filter-tag" data-provider="gemini">Gemini</button>
-                <button class="st-api-filter-tag" data-provider="ollama">Ollama</button>
-                <button class="st-api-filter-tag" data-provider="custom">自定义/其他</button>
+            <!-- Provider Filter Chips Navigation -->
+            <div class="st-api-nav-chips-scroller">
+                <div class="st-api-nav-chips">
+                    <button type="button" class="st-api-nav-chip active" data-provider="all">
+                        <span>全部档案</span>
+                        <span class="st-api-chip-count" id="st_api_count_all">0</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="deepseek">
+                        <i class="fa-solid fa-brain"></i>
+                        <span>DeepSeek</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="openai">
+                        <i class="fa-solid fa-robot"></i>
+                        <span>OpenAI</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="claude">
+                        <i class="fa-solid fa-feather"></i>
+                        <span>Claude</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="gemini">
+                        <i class="fa-brands fa-google"></i>
+                        <span>Gemini</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="siliconflow">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span>硅基流动</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="openrouter">
+                        <i class="fa-solid fa-route"></i>
+                        <span>OpenRouter</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="ollama">
+                        <i class="fa-solid fa-terminal"></i>
+                        <span>Ollama</span>
+                    </button>
+                    <button type="button" class="st-api-nav-chip" data-provider="custom">
+                        <i class="fa-solid fa-layer-group"></i>
+                        <span>自定义/中转</span>
+                    </button>
+                </div>
             </div>
 
-            <!-- Active Profile Banner -->
-            <div id="st_api_active_banner" class="st-api-active-banner" style="display:none;">
-                <div class="st-api-active-banner-header">
-                    <div class="st-api-active-banner-title">
-                        <i class="fa-solid fa-circle-check"></i> 当前生效 API：<strong id="st_api_banner_name"></strong>
-                        <span id="st_api_banner_provider" class="st-api-tag"></span>
+            <!-- Active Profile Hero Banner -->
+            <div id="st_api_active_banner" class="st-api-hero-banner" style="display:none;">
+                <div class="st-api-hero-main">
+                    <div class="st-api-hero-info">
+                        <div class="st-api-hero-tagline">
+                            <span class="st-api-live-indicator"></span>
+                            <span class="st-api-hero-label">当前生效配置</span>
+                            <span id="st_api_banner_provider" class="st-api-tag"></span>
+                        </div>
+                        <h4 id="st_api_banner_name" class="st-api-hero-title">--</h4>
                     </div>
-                    <div class="st-api-banner-controls">
-                        <button id="st_api_btn_banner_test" class="menu_button" title="测试当前 API 连通性">
-                            <i class="fa-solid fa-network-wired"></i> 测试连接
+                    <div class="st-api-hero-actions">
+                        <button type="button" id="st_api_btn_banner_test" class="st-api-btn st-api-btn-hero-action" title="测试该连接的实时连通性与网络延迟">
+                            <i class="fa-solid fa-wave-square"></i>
+                            <span>测延迟</span>
                         </button>
-                        <button id="st_api_btn_banner_apply" class="menu_button" title="将当前 API 配置同步到酒馆主连接">
-                            <i class="fa-solid fa-plug-circle-check"></i> 同步到酒馆
+                        <button type="button" id="st_api_btn_banner_apply" class="st-api-btn st-api-btn-hero-primary" title="一键同步至酒馆主连接面板">
+                            <i class="fa-solid fa-arrows-rotate"></i>
+                            <span>同步酒馆</span>
                         </button>
                     </div>
                 </div>
-                <div class="st-api-active-banner-details">
-                    <div class="st-api-detail-item"><i class="fa-solid fa-link"></i> <span id="st_api_banner_url"></span></div>
-                    <div class="st-api-detail-item"><i class="fa-solid fa-microchip"></i> <span id="st_api_banner_model"></span></div>
-                    <div id="st_api_banner_latency" class="st-api-latency-indicator" style="display:none;"></div>
+
+                <div class="st-api-hero-footer">
+                    <div class="st-api-hero-stat">
+                        <i class="fa-solid fa-link"></i>
+                        <span id="st_api_banner_url" class="st-api-mono"></span>
+                    </div>
+                    <div class="st-api-hero-stat">
+                        <i class="fa-solid fa-microchip"></i>
+                        <span id="st_api_banner_model" class="st-api-mono st-api-hero-model-text"></span>
+                    </div>
+                    <div id="st_api_banner_latency" class="st-api-latency-pill" style="display:none;"></div>
                 </div>
             </div>
 
-            <!-- API Profiles Grid -->
-            <div id="st_api_list_container" class="st-api-list-grid">
-                <!-- Profile Cards dynamically inserted here -->
+            <!-- Profile Cards Container -->
+            <div id="st_api_list_container" class="st-api-cards-grid">
+                <!-- Dynamically populated cards -->
             </div>
 
-            <!-- Empty State -->
-            <div id="st_api_empty_state" class="st-api-empty" style="display:none;">
-                <i class="fa-solid fa-cloud-arrow-up st-api-empty-icon"></i>
-                <p>暂未添加任何 API 档案</p>
-                <small>点击上方 <b>“新增 API”</b> 快速添加您的 OpenAI / DeepSeek / Claude / Gemini / 本地模型配置</small>
+            <!-- Empty State Display -->
+            <div id="st_api_empty_state" class="st-api-empty-box" style="display:none;">
+                <div class="st-api-empty-visual">
+                    <i class="fa-solid fa-cubes-stacked"></i>
+                </div>
+                <h4 class="st-api-empty-headline">暂无匹配的 API 档案</h4>
+                <p class="st-api-empty-desc">您可以点击上方 <b>“导入当前主API”</b> 快速保存当前正在使用的接口配置，或点击 <b>“新增档案”</b> 录入新接口。</p>
             </div>
 
-            <hr class="sysHR" />
-            <div class="st-api-footer-tips">
-                <small><i class="fa-solid fa-shield-halved"></i> <b>数据安全承诺：</b> 所有 API 网址、密钥及自定义配置均严格保存在您的本地浏览器中，绝不会被上传或远程泄露。</small>
+            <!-- Footer Security & Status Note -->
+            <div class="st-api-safe-footer">
+                <div class="st-api-safe-note">
+                    <i class="fa-solid fa-lock"></i>
+                    <span><b>隐私与存储安全：</b> API 密钥及配置完全持久化于当前浏览器的本地沙盒中，零远程中转，确保资产安全。</span>
+                </div>
             </div>
         </div>
     </div>

@@ -1,195 +1,265 @@
-<div id="st_api_modal_template" class="st-api-modal-wrapper">
-    <div class="st-api-modal-header">
-        <h3 class="st-api-modal-title">
-            <i class="fa-solid fa-sliders"></i>
-            <span id="st_api_modal_heading">新增 / 编辑 API 配置</span>
-        </h3>
-    </div>
-
-    <!-- Quick Preset Selector -->
-    <div class="st-api-form-row">
-        <label class="st-api-label"><i class="fa-solid fa-wand-magic-sparkles"></i> 快速选择模板 / 厂商：</label>
-        <div class="st-api-preset-chips">
-            <button type="button" class="st-api-chip" data-preset="deepseek">DeepSeek 官方</button>
-            <button type="button" class="st-api-chip" data-preset="openai">OpenAI 官方</button>
-            <button type="button" class="st-api-chip" data-preset="claude">Anthropic Claude</button>
-            <button type="button" class="st-api-chip" data-preset="gemini">Google Gemini</button>
-            <button type="button" class="st-api-chip" data-preset="siliconflow">硅基流动 (SiliconFlow)</button>
-            <button type="button" class="st-api-chip" data-preset="openrouter">OpenRouter</button>
-            <button type="button" class="st-api-chip" data-preset="ollama">Ollama (本地)</button>
-            <button type="button" class="st-api-chip" data-preset="custom">清空/自定义</button>
+<div id="st_api_modal_template" class="st-api-modal-container">
+    <!-- Modal Header -->
+    <div class="st-api-modal-head">
+        <div class="st-api-modal-head-main">
+            <div class="st-api-modal-avatar">
+                <i class="fa-solid fa-sliders"></i>
+            </div>
+            <div class="st-api-modal-head-titles">
+                <h3 class="st-api-modal-main-title" id="st_api_modal_heading">API 档案配置</h3>
+                <p class="st-api-modal-desc">管理模型端点、接口密钥、模型名称与默认附加请求参数</p>
+            </div>
         </div>
     </div>
 
-    <div class="st-api-modal-body">
+    <!-- Provider Presets Ribbon -->
+    <div class="st-api-form-block st-api-preset-block">
+        <div class="st-api-preset-bar-header">
+            <span class="st-api-block-label"><i class="fa-solid fa-wand-magic-sparkles"></i> 快速选择服务商模板：</span>
+        </div>
+        <div class="st-api-preset-grid">
+            <button type="button" class="st-api-preset-pill" data-preset="deepseek">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-brain"></i></span>
+                <span class="st-api-preset-name">DeepSeek</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="openai">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-robot"></i></span>
+                <span class="st-api-preset-name">OpenAI</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="claude">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-feather"></i></span>
+                <span class="st-api-preset-name">Claude</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="gemini">
+                <span class="st-api-preset-icon"><i class="fa-brands fa-google"></i></span>
+                <span class="st-api-preset-name">Gemini</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="siliconflow">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-microchip"></i></span>
+                <span class="st-api-preset-name">硅基流动</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="openrouter">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-route"></i></span>
+                <span class="st-api-preset-name">OpenRouter</span>
+            </button>
+            <button type="button" class="st-api-preset-pill" data-preset="ollama">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-terminal"></i></span>
+                <span class="st-api-preset-name">Ollama 本地</span>
+            </button>
+            <button type="button" class="st-api-preset-pill st-api-preset-reset" data-preset="custom">
+                <span class="st-api-preset-icon"><i class="fa-solid fa-rotate-left"></i></span>
+                <span class="st-api-preset-name">自定义/重置</span>
+            </button>
+        </div>
+    </div>
+
+    <div class="st-api-modal-form-content">
         <input type="hidden" id="st_api_form_id" value="" />
 
-        <!-- Row 1: Name & Provider -->
-        <div class="st-api-form-grid">
-            <div class="st-api-form-col">
-                <label for="st_api_form_name" class="st-api-label">
-                    <span class="st-api-required">*</span> API 别名 / 名称：
+        <!-- Row 1: Profile Name & Provider Type -->
+        <div class="st-api-input-grid-2">
+            <div class="st-api-field-group">
+                <label for="st_api_form_name" class="st-api-form-label">
+                    <span class="st-api-form-req">*</span> 档案名称 (Alias)：
                 </label>
-                <input type="text" id="st_api_form_name" class="text_pole" placeholder="例如：DeepSeek 生产主力、Claude 备用" />
+                <div class="st-api-input-box">
+                    <i class="fa-solid fa-signature st-api-input-icon"></i>
+                    <input type="text" id="st_api_form_name" class="st-api-text-input" placeholder="例如：DeepSeek-V3 生产主力、Claude 3.5 备用" />
+                </div>
             </div>
-            <div class="st-api-form-col">
-                <label for="st_api_form_provider" class="st-api-label">
-                    <span class="st-api-required">*</span> 协议 / 厂商类型：
+            <div class="st-api-field-group">
+                <label for="st_api_form_provider" class="st-api-form-label">
+                    <span class="st-api-form-req">*</span> 协议规范 / 厂商类型：
                 </label>
-                <select id="st_api_form_provider" class="text_pole">
-                    <option value="deepseek">DeepSeek (OpenAI 兼容)</option>
-                    <option value="openai">OpenAI</option>
-                    <option value="claude">Anthropic / Claude</option>
-                    <option value="gemini">Google Gemini</option>
-                    <option value="siliconflow">硅基流动 (SiliconFlow)</option>
-                    <option value="openrouter">OpenRouter</option>
-                    <option value="ollama">Ollama (本地)</option>
-                    <option value="custom">自定义 / 其他中转</option>
-                </select>
+                <div class="st-api-input-box">
+                    <i class="fa-solid fa-diagram-project st-api-input-icon"></i>
+                    <select id="st_api_form_provider" class="st-api-select-input">
+                        <option value="deepseek">DeepSeek (OpenAI 协议规范)</option>
+                        <option value="openai">OpenAI (官方 / 兼容中转)</option>
+                        <option value="claude">Anthropic / Claude 协议</option>
+                        <option value="gemini">Google Gemini (OpenAI 兼容)</option>
+                        <option value="siliconflow">硅基流动 (SiliconFlow)</option>
+                        <option value="openrouter">OpenRouter 聚合分发</option>
+                        <option value="ollama">Ollama (本地运行服务)</option>
+                        <option value="custom">自定义 / 其他第三方中转</option>
+                    </select>
+                </div>
             </div>
         </div>
 
-        <!-- Row 2: API URL -->
-        <div class="st-api-form-row">
-            <label for="st_api_form_url" class="st-api-label">
-                <span class="st-api-required">*</span> API 基础网址 (Endpoint / Base URL)：
+        <!-- Row 2: Base Endpoint URL -->
+        <div class="st-api-field-group">
+            <label for="st_api_form_url" class="st-api-form-label">
+                <span class="st-api-form-req">*</span> 接口基础网址 (Base URL / Endpoint)：
             </label>
-            <div class="st-api-input-group">
-                <input type="text" id="st_api_form_url" class="text_pole" placeholder="https://api.deepseek.com/v1" />
-                <button type="button" id="st_api_btn_normalize_url" class="menu_button" title="标准化修复末尾斜杠和/v1">
-                    <i class="fa-solid fa-wrench"></i> 规范化
+            <div class="st-api-addon-group">
+                <div class="st-api-input-box st-api-flex-1">
+                    <i class="fa-solid fa-link st-api-input-icon"></i>
+                    <input type="text" id="st_api_form_url" class="st-api-text-input st-api-mono" placeholder="https://api.deepseek.com/v1" />
+                </div>
+                <button type="button" id="st_api_btn_normalize_url" class="st-api-btn st-api-btn-addon" title="标准化网址格式（自动去除多余斜杠并补全标准规范）">
+                    <i class="fa-solid fa-wand-magic-sparkles"></i>
+                    <span>规范化</span>
                 </button>
             </div>
-            <small class="st-api-hint">支持完整地址或兼容 Base URL，如 <code>https://api.openai.com/v1</code></small>
+            <p class="st-api-field-hint">
+                <i class="fa-regular fa-circle-question"></i> 请填写标准 Base URL，例如 <code>https://api.openai.com/v1</code> 或 <code>https://api.siliconflow.cn/v1</code>
+            </p>
         </div>
 
         <!-- Row 3: API Key -->
-        <div class="st-api-form-row">
-            <label for="st_api_form_key" class="st-api-label">
-                API 密钥 (API Key / Token)：
+        <div class="st-api-field-group">
+            <label for="st_api_form_key" class="st-api-form-label">
+                访问密钥 (API Key / Bearer Token)：
             </label>
-            <div class="st-api-input-group">
-                <input type="password" id="st_api_form_key" class="text_pole" placeholder="sk-..." autocomplete="off" />
-                <button type="button" id="st_api_btn_toggle_key" class="menu_button" title="显示 / 隐藏密钥">
+            <div class="st-api-addon-group">
+                <div class="st-api-input-box st-api-flex-1">
+                    <i class="fa-solid fa-key st-api-input-icon"></i>
+                    <input type="password" id="st_api_form_key" class="st-api-text-input st-api-mono" placeholder="sk-..." autocomplete="off" />
+                </div>
+                <button type="button" id="st_api_btn_toggle_key" class="st-api-btn st-api-btn-addon" title="切换明文显示/隐藏">
                     <i class="fa-solid fa-eye"></i>
                 </button>
-                <button type="button" id="st_api_btn_paste_key" class="menu_button" title="从剪贴板粘贴">
+                <button type="button" id="st_api_btn_paste_key" class="st-api-btn st-api-btn-addon" title="从系统剪贴板快速粘贴">
                     <i class="fa-solid fa-paste"></i>
+                    <span>粘贴</span>
                 </button>
             </div>
-            <small class="st-api-hint"><i class="fa-solid fa-lock"></i> 密钥存储在本地浏览器中，请勿与他人共用包含私密密钥的文件。</small>
+            <p class="st-api-field-hint">
+                <i class="fa-solid fa-shield-halved"></i> 密钥安全保存在本地浏览器中，绝不上报云端。
+            </p>
         </div>
 
-        <!-- Row 4: Model & Fetch Models -->
-        <div class="st-api-form-row">
-            <label for="st_api_form_model" class="st-api-label">
-                <span class="st-api-required">*</span> 选择 / 填写模型 (Model)：
-            </label>
-            <div class="st-api-input-group">
-                <input type="text" id="st_api_form_model" class="text_pole" list="st_api_model_datalist" placeholder="例如：deepseek-chat, gpt-4o, claude-3-5-sonnet-20241022" />
-                <datalist id="st_api_model_datalist"></datalist>
-                <button type="button" id="st_api_btn_fetch_models" class="menu_button" title="从当前 API 网址在线拉取可用模型列表">
-                    <i class="fa-solid fa-cloud-arrow-down"></i> <span id="st_api_fetch_btn_text">拉取模型</span>
-                </button>
-            </div>
-        </div>
-
-        <!-- Collapsible Tabs for Advanced Settings -->
-        <div class="st-api-tabs">
-            <div class="st-api-tab-nav">
-                <button type="button" class="st-api-tab-btn active" data-tab="params"><i class="fa-solid fa-sliders"></i> 生成参数</button>
-                <button type="button" class="st-api-tab-btn" data-tab="headers"><i class="fa-solid fa-heading"></i> 附加请求头</button>
-                <button type="button" class="st-api-tab-btn" data-tab="body"><i class="fa-solid fa-code"></i> 自定义 Body</button>
-                <button type="button" class="st-api-tab-btn" data-tab="prompt"><i class="fa-solid fa-comment-dots"></i> 预设提示词</button>
-                <button type="button" class="st-api-tab-btn" data-tab="notes"><i class="fa-solid fa-note-sticky"></i> 备注信息</button>
-            </div>
-
-            <!-- Tab 1: Generation Params -->
-            <div class="st-api-tab-pane active" id="st_tab_params">
-                <div class="st-api-form-grid">
-                    <div class="st-api-form-col">
-                        <label for="st_api_form_temperature" class="st-api-label">Temperature (温度)：</label>
-                        <input type="number" id="st_api_form_temperature" class="text_pole" step="0.05" min="0" max="2" placeholder="默认 1.0" />
-                    </div>
-                    <div class="st-api-form-col">
-                        <label for="st_api_form_top_p" class="st-api-label">Top P：</label>
-                        <input type="number" id="st_api_form_top_p" class="text_pole" step="0.05" min="0" max="1" placeholder="默认 1.0" />
-                    </div>
-                </div>
-                <div class="st-api-form-grid">
-                    <div class="st-api-form-col">
-                        <label for="st_api_form_max_tokens" class="st-api-label">最大输出 Token (Max Tokens)：</label>
-                        <input type="number" id="st_api_form_max_tokens" class="text_pole" min="1" placeholder="例如：4096" />
-                    </div>
-                    <div class="st-api-form-col">
-                        <label for="st_api_form_context_len" class="st-api-label">上下文上限 (Context Tokens)：</label>
-                        <input type="number" id="st_api_form_context_len" class="text_pole" min="1" placeholder="例如：64000" />
-                    </div>
-                </div>
-                <div class="st-api-checkbox-row">
-                    <label class="checkbox_label">
-                        <input type="checkbox" id="st_api_form_stream" checked />
-                        <span>启用流式传输响应 (Streaming)</span>
+        <!-- Row 4: Model Selector & Dynamic Discovery -->
+        <div class="st-api-model-studio-card">
+            <div class="st-api-studio-head">
+                <div class="st-api-studio-title-wrap">
+                    <label for="st_api_form_model" class="st-api-form-label mb-0">
+                        <span class="st-api-form-req">*</span> 选用模型 (Model ID)：
                     </label>
                 </div>
+                <div id="st_api_model_count_badge" class="st-api-tag-counter" style="display:none;">
+                    <i class="fa-solid fa-circle-check"></i>
+                    <span id="st_api_model_count_text">已拉取 0 个模型</span>
+                </div>
             </div>
 
-            <!-- Tab 2: Custom Headers -->
-            <div class="st-api-tab-pane" id="st_tab_headers">
-                <label for="st_api_form_headers" class="st-api-label">自定义 HTTP 请求头 (JSON 格式)：</label>
-                <textarea id="st_api_form_headers" class="text_pole st-api-textarea-code" rows="4" placeholder='{
-  "HTTP-Referer": "https://sillytavern.app",
-  "X-Title": "SillyTavern Custom",
-  "User-Agent": "ST-API-Manager/1.0"
-}'></textarea>
-                <small class="st-api-hint">用于中转站、代理或需要特定 Header 的专属通道。</small>
+            <div class="st-api-addon-group">
+                <div class="st-api-input-box st-api-flex-1">
+                    <i class="fa-solid fa-microchip st-api-input-icon"></i>
+                    <input type="text" id="st_api_form_model" class="st-api-text-input st-api-mono st-api-model-input-highlight" placeholder="例如：deepseek-chat, gpt-4o, claude-3-5-sonnet-20241022" />
+                </div>
+                <button type="button" id="st_api_btn_fetch_models" class="st-api-btn st-api-btn-fetch" title="从当前 API 端点在线查询可调用的完整模型列表">
+                    <i class="fa-solid fa-cloud-arrow-down"></i>
+                    <span id="st_api_fetch_btn_text">拉取模型列表</span>
+                </button>
             </div>
 
-            <!-- Tab 3: Custom Request Body -->
-            <div class="st-api-tab-pane" id="st_tab_body">
-                <label for="st_api_form_custom_body" class="st-api-label">自定义额外 Payload 参数 (JSON 格式)：</label>
-                <textarea id="st_api_form_custom_body" class="text_pole st-api-textarea-code" rows="4" placeholder='{
-  "frequency_penalty": 0.0,
-  "presence_penalty": 0.0,
-  "repetition_penalty": 1.05
-}'></textarea>
-                <small class="st-api-hint">请求发送时合并到顶层 JSON 请求体中。</small>
+            <!-- Visual Model Selector Panel (Appears after fetch) -->
+            <div id="st_api_model_select_container" class="st-api-model-picker-drawer" style="display:none;">
+                <div class="st-api-picker-toolbar">
+                    <span class="st-api-picker-hint"><i class="fa-solid fa-list-check"></i> 在线拉取的可用模型列表（点击项即可选用）：</span>
+                    <div class="st-api-picker-search-box">
+                        <i class="fa-solid fa-filter"></i>
+                        <input type="text" id="st_api_model_filter_input" class="st-api-picker-filter-input" placeholder="输入关键字快速过滤模型..." />
+                    </div>
+                </div>
+
+                <div class="st-api-model-list-wrapper">
+                    <select id="st_api_model_select" class="st-api-model-native-select" size="7">
+                        <!-- Populated dynamically with full visibility and scrolling -->
+                    </select>
+                </div>
             </div>
 
-            <!-- Tab 4: System Prompt -->
-            <div class="st-api-tab-pane" id="st_tab_prompt">
-                <label for="st_api_form_sysprompt" class="st-api-label">默认系统提示词 / 角色前缀 (System Prompt)：</label>
-                <textarea id="st_api_form_sysprompt" class="text_pole" rows="4" placeholder="可选：为此 API 配置绑定的专属预设前置指令..."></textarea>
+            <p class="st-api-field-hint">
+                <i class="fa-solid fa-hand-pointer"></i> 支持直接手动键入自定义模型名称，或点击 <b>“拉取模型列表”</b> 从端点一键浏览选择。
+            </p>
+        </div>
+
+        <!-- Section: Default Request Additional Parameters (酒馆默认附加参数) -->
+        <div class="st-api-section-card">
+            <div class="st-api-section-title">
+                <i class="fa-solid fa-sliders"></i>
+                <span>默认附加参数与流式配置</span>
+                <small class="st-api-section-sub">激活此 API 档案时会自动同步填入酒馆对应的设置与附加参数中</small>
             </div>
 
-            <!-- Tab 5: Notes -->
-            <div class="st-api-tab-pane" id="st_tab_notes">
-                <label for="st_api_form_notes" class="st-api-label">备注说明 / 附加信息：</label>
-                <textarea id="st_api_form_notes" class="text_pole" rows="4" placeholder="例如：此 Key 每月限额 $50，主要用于长篇小说写作与破限测试..."></textarea>
+            <!-- Streaming Toggle -->
+            <div class="st-api-field-group">
+                <label class="st-api-custom-checkbox">
+                    <input type="checkbox" id="st_api_form_stream" checked />
+                    <span class="st-api-checkbox-mark"></span>
+                    <span class="st-api-checkbox-text"><b>启用流式传输 (Streaming - 逐字实时打字输出)</b></span>
+                </label>
+                <p class="st-api-field-hint" style="margin-left: 20px;">
+                    <i class="fa-solid fa-bolt" style="color:#38bdf8;"></i> 开启后 AI 逐字实时输出；关闭后等待整段生成完毕一次性输出。
+                </p>
+            </div>
+
+            <!-- 1. Include Body Parameters -->
+            <div class="st-api-field-group">
+                <label for="st_api_form_include_body" class="st-api-form-label">
+                    <i class="fa-solid fa-plus-circle" style="color:#34d399;"></i> 包含主体参数 (Include Body Parameters - YAML 键值)：
+                </label>
+                <textarea id="st_api_form_include_body" class="st-api-code-textarea" rows="3" placeholder="top_k: 20&#10;repetition_penalty: 1.1"></textarea>
+                <p class="st-api-field-hint">直接合并至 Chat Completion 请求体中（例如 <code>top_k: 20</code>）</p>
+            </div>
+
+            <!-- 2. Exclude Body Parameters -->
+            <div class="st-api-field-group">
+                <label for="st_api_form_exclude_body" class="st-api-form-label">
+                    <i class="fa-solid fa-minus-circle" style="color:#f87171;"></i> 排除主体参数 (Exclude Body Parameters - YAML 列表)：
+                </label>
+                <textarea id="st_api_form_exclude_body" class="st-api-code-textarea" rows="3" placeholder="- frequency_penalty&#10;- presence_penalty"></textarea>
+                <p class="st-api-field-hint">从请求体中剔除指定参数键（例如 <code>- frequency_penalty</code>）</p>
+            </div>
+
+            <!-- 3. Include Request Headers -->
+            <div class="st-api-field-group">
+                <label for="st_api_form_include_headers" class="st-api-form-label">
+                    <i class="fa-solid fa-network-wired" style="color:#60a5fa;"></i> 包含请求标头 (Include Request Headers - YAML 键值)：
+                </label>
+                <textarea id="st_api_form_include_headers" class="st-api-code-textarea" rows="3" placeholder="HTTP-Referer: https://sillytavern.app&#10;X-Title: SillyTavern"></textarea>
+                <p class="st-api-field-hint">附加的 HTTP 请求标头（例如 <code>HTTP-Referer: ...</code>）</p>
+            </div>
+
+            <!-- 4. Notes -->
+            <div class="st-api-field-group">
+                <label for="st_api_form_notes" class="st-api-form-label">
+                    <i class="fa-regular fa-note-sticky"></i> 档案备注说明 (Notes)：
+                </label>
+                <textarea id="st_api_form_notes" class="st-api-textarea" rows="2" placeholder="例如：主力高并发账号、测试备用、充值到期时间等..."></textarea>
             </div>
         </div>
 
-        <!-- Active Checkbox & Test Status -->
-        <div class="st-api-form-footer-options">
-            <label class="checkbox_label">
-                <input type="checkbox" id="st_api_form_set_active" />
-                <span><b>保存后立即设为当前有效 API</b></span>
+        <!-- Footer Config Options & Test Output -->
+        <div class="st-api-modal-bottom-bar">
+            <label class="st-api-custom-checkbox">
+                <input type="checkbox" id="st_api_form_set_active" checked />
+                <span class="st-api-checkbox-mark"></span>
+                <span class="st-api-checkbox-text"><b>保存后立即激活该 API（设为当前生效）</b></span>
             </label>
-            <div id="st_api_modal_test_result" class="st-api-test-result-box" style="display:none;"></div>
+            <div id="st_api_modal_test_result" class="st-api-test-banner" style="display:none;"></div>
         </div>
     </div>
 
-    <!-- Modal Footer Actions -->
-    <div class="st-api-modal-footer">
-        <button type="button" id="st_api_btn_test_modal" class="menu_button">
-            <i class="fa-solid fa-bolt"></i> 测试连通性
-        </button>
-        <div class="st-api-footer-right-buttons">
-            <button type="button" id="st_api_btn_cancel_modal" class="menu_button">
-                取消
+    <!-- Modal Action Buttons Footer -->
+    <div class="st-api-modal-foot">
+        <div class="st-api-foot-left">
+            <button type="button" id="st_api_btn_test_modal" class="st-api-btn st-api-btn-ghost">
+                <i class="fa-solid fa-wave-square"></i>
+                <span>测试连通性</span>
             </button>
-            <button type="button" id="st_api_btn_save_modal" class="menu_button menu_button_primary">
-                <i class="fa-solid fa-floppy-disk"></i> 保存配置
+        </div>
+        <div class="st-api-foot-right">
+            <button type="button" id="st_api_btn_cancel_modal" class="st-api-btn st-api-btn-secondary">
+                <i class="fa-solid fa-xmark"></i>
+                <span>取消</span>
+            </button>
+            <button type="button" id="st_api_btn_save_modal" class="st-api-btn st-api-btn-primary">
+                <i class="fa-solid fa-floppy-disk"></i>
+                <span>保存配置档案</span>
             </button>
         </div>
     </div>
